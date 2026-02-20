@@ -44,22 +44,43 @@
 
 
 
+        <!-- The user clicks on the “Account Settings” button.
+The system takes the user to the “Account Settings” screen.
+The user clicks “Manage User Roles”.
+The system displays a list of all registered user accounts.
+The user selects a role from a dropdown menu next to a username.
 
+
+The user clicks “Save Changes”.
+The system gives a confirmation prompt to notify the user that they have saved successfully.
+
+ -->
         <div id="content">
             <div id="content_top"></div>
             <div id="content_main">
-                <h2>Login</h2>
+                <h2>Admin User Settings</h2>
                 <p>&nbsp;</p>
-                <h3>Please input your username and password:</h3>
+                <h3>Users:</h3>
                 <p>
-                <form action="UserAccount.html" method="post" onsubmit="alert('Successfully logged in!'); return true;">
-                    <label for="username">Username:</label><br />
-                    <input type="text" id="username" name="username"><br />
-                    <label for="password">Password:</label><br />
-                    <input type="password" id="password" name="password"><br /><br />
-                    <input type="submit" value="Submit">
-                </form>
-                <li>Don't have an account? <a href="CreateAccount.html">Create Account</a></li>
+                    <!-- List of three example users with dropdown menus for roles -->
+                <ul>
+                    <li>John Doe - <select>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                            <option value="moderator">Moderator</option>
+                        </select></li>
+                    <li>Jane Smith - <select>
+                            <option value="admin">Admin</option>
+                            <option value="user" selected>User</option>
+                            <option value="moderator">Moderator</option>
+                        </select></li>
+                    <li>Bob Johnson - <select>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                            <option value="moderator" selected>Moderator</option>
+                        </select></li>
+                </ul>
+                <button onclick="alert('Changes saved successfully!')">Save Changes</button>
             </div>
 
             <div id="content_bottom"></div>
