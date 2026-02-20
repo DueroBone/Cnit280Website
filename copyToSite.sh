@@ -1,1 +1,1 @@
-sudo cp slickblue/* /var/www/Cnit280
+sudo cp -r slickblue/* /var/www/Cnit280
