@@ -1,0 +1,126 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title> Special Population Resource
+        Connections</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>SPRC<span class="off">db</span></h1>
+            <h2>By Team 8</h2>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li class="menuitem"><a href="index.html">Home</a></li>
+                <li class="menuitem"><a href="Login.html">Login</a></li>
+                <li class="menuitem"><a href="TODO.html">Products</a></li>
+                <li class="menuitem"><a href="TODO.html">Services</a></li>
+                <li class="menuitem"><a href="TODO.html">Contact</a></li>
+            </ul>
+        </div>
+
+        <div id="leftmenu">
+
+            <div id="leftmenu_top"></div>
+
+            <div id="leftmenu_main">
+
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="UserAccount.html">User Account</a></li>
+                    <li><a href="AdminUserSettings.html">Admin Settings</a></li>
+                </ul>
+            </div>
+
+
+            <div id="leftmenu_bottom"></div>
+        </div>
+
+
+        <div id="content">
+            <div id="content_top"></div>
+            <div id="content_main">
+                <h2>Add Contact Information</h2>
+                <p>&nbsp;</p>
+                <h3>Provide your contact details</h3>
+                <p>
+                    Complete the form below and click Submit. Required fields are marked with *.
+                </p>
+                <p>&nbsp;</p>
+
+                <form id="addContactForm" action="#" method="post">
+                    <label for="phoneNumber">Phone Number *</label><br />
+                    <input type="text" id="phoneNumber" name="phoneNumber" maxlength="20" /><br /><br />
+
+                    <label for="emailAddress">Email Address *</label><br />
+                    <input type="text" id="emailAddress" name="emailAddress" maxlength="120" /><br /><br />
+
+                    <label for="streetAddress">Street Address *</label><br />
+                    <input type="text" id="streetAddress" name="streetAddress" maxlength="150" /><br /><br />
+
+                    <label for="city">City *</label><br />
+                    <input type="text" id="city" name="city" maxlength="80" /><br /><br />
+
+                    <label for="state">State *</label><br />
+                    <input type="text" id="state" name="state" maxlength="30" /><br /><br />
+
+                    <label for="zipCode">Zip Code *</label><br />
+                    <input type="text" id="zipCode" name="zipCode" maxlength="10" /><br /><br />
+
+                    <input type="submit" value="Submit" />
+                </form>
+
+                <p id="contactFormMessage" class="form-message"></p>
+            </div>
+
+            <div id="content_bottom"></div>
+            <div id="footer"><a href="http://www.bryantsmith.com/template">css templates</a> by <a
+                    href="http://www.bryantsmith.com">florida web design</a></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var form = document.getElementById('addContactForm');
+            var message = document.getElementById('contactFormMessage');
+
+            function setMessage(text, className) {
+                message.className = 'form-message ' + className;
+                message.innerHTML = text;
+            }
+
+            form.onsubmit = function (event) {
+                event.preventDefault();
+
+                var phoneNumber = document.getElementById('phoneNumber');
+                var emailAddress = document.getElementById('emailAddress');
+                var streetAddress = document.getElementById('streetAddress');
+                var city = document.getElementById('city');
+                var state = document.getElementById('state');
+                var zipCode = document.getElementById('zipCode');
+
+                var contactRecord = {
+                    phoneNumber: phoneNumber,
+                    emailAddress: emailAddress,
+                    streetAddress: streetAddress,
+                    city: city,
+                    state: state,
+                    zipCode: zipCode
+                };
+
+                setMessage('Contact information saved successfully.', 'success-message');
+                form.reset();
+                return false;
+            };
+        })();
+    </script>
+</body>
+
+</html>
