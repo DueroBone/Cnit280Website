@@ -70,6 +70,16 @@
             var listElement = document.getElementById('upcomingEventsList');
             var messageElement = document.getElementById('eventsMessage');
 
+            window.toggleEventSignup = function (buttonElement) {
+                alert('You have beed added to this event');
+
+                if (buttonElement.innerHTML === 'Sign Up') {
+                    buttonElement.innerHTML = 'Leave';
+                } else {
+                    buttonElement.innerHTML = 'Sign Up';
+                }
+            };
+
             function setMessage(text, className) {
                 messageElement.className = 'form-message ' + className;
                 messageElement.innerHTML = text;
@@ -91,6 +101,7 @@
                     html += '<p><strong>Date:</strong> ' + (events[i].date || 'N/A') + '</p>';
                     html += '<p><strong>Number of Volunteers Needed:</strong> ' +
                         (events[i].numOpportunities !== undefined ? events[i].numOpportunities : 'N/A') + '</p>';
+                    html += '<button type="button" onclick="toggleEventSignup(this)">Sign Up</button>';
                     html += '</li>';
                 }
 
