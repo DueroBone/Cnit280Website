@@ -1,0 +1,181 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Special Population Resource Connections</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>SPRC<span class="off">db</span></h1>
+            <h2>By Team 8</h2>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li class="menuitem"><a href="index.html">Home</a></li>
+                <li class="menuitem"><a href="Login.html">Login</a></li>
+                <li class="menuitem"><a href="TODO.html">Products</a></li>
+                <li class="menuitem"><a href="TODO.html">Services</a></li>
+                <li class="menuitem"><a href="TODO.html">Contact</a></li>
+            </ul>
+        </div>
+
+        <div id="leftmenu">
+            <div id="leftmenu_top"></div>
+            <div id="leftmenu_main">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="UpcomingEvents.html">Upcoming Events</a></li>
+                    <li><a href="Account/UserAccount.html">User Account</a></li>
+                    <li><a href="Account/AdminUserSettings.html">Admin Settings</a></li>
+                </ul>
+            </div>
+            <div id="leftmenu_bottom"></div>
+        </div>
+
+        <div id="content">
+            <div id="content_top"></div>
+            <div id="content_main">
+                <h2>Edit Upcoming Event</h2>
+                <p>&nbsp;</p>
+                <h3>Update event details</h3>
+                <p>Select an available event to load its current details.</p>
+                <p>&nbsp;</p>
+
+                <form id="editEventForm" action="#" method="post">
+                    <label for="eventSelect">Available Events *</label><br />
+                    <select id="eventSelect" name="eventSelect"></select><br /><br />
+
+                    <label for="eventName">Event Name *</label><br />
+                    <input type="text" id="eventName" name="eventName" maxlength="120" /><br /><br />
+
+                    <label for="eventDate">Event Date *</label><br />
+                    <input type="date" id="eventDate" name="eventDate" /><br /><br />
+
+                    <label for="eventOpportunities">Number of Volunteers Needed *</label><br />
+                    <input type="number" id="eventOpportunities" name="eventOpportunities" min="0" /><br /><br />
+
+                    <input type="submit" value="Save Changes" />
+                </form>
+
+                <p id="editEventMessage" class="form-message"></p>
+            </div>
+            <div id="content_bottom"></div>
+            <div id="footer"><a href="http://www.bryantsmith.com/template">css templates</a> by <a
+                    href="http://www.bryantsmith.com">florida web design</a></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var form = document.getElementById('editEventForm');
+            var message = document.getElementById('editEventMessage');
+            var eventSelect = document.getElementById('eventSelect');
+            var eventName = document.getElementById('eventName');
+            var eventDate = document.getElementById('eventDate');
+            var eventOpportunities = document.getElementById('eventOpportunities');
+            var availableEvents = [];
+
+            function setMessage(text, className) {
+                message.className = 'form-message ' + className;
+                message.innerHTML = text;
+            }
+
+            function clearEventForm() {
+                eventName.value = '';
+                eventDate.value = '';
+                eventOpportunities.value = '';
+            }
+
+            function loadEventAtIndex(index) {
+                var selectedEvent = availableEvents[index];
+
+                if (!selectedEvent) {
+                    return;
+                }
+
+                eventName.value = selectedEvent.name || '';
+                eventDate.value = selectedEvent.date || '';
+                eventOpportunities.value =
+                    selectedEvent.numOpportunities !== undefined ? selectedEvent.numOpportunities : '';
+            }
+
+            function preloadEvents() {
+                fetch('upcomingEvents.json')
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error('Unable to load event data.');
+                        }
+                        return response.json();
+                    })
+                    .then(function (events) {
+                        var options = '<option value="new">New</option>';
+                        var i;
+
+                        if (!events || !events.length) {
+                            eventSelect.innerHTML = options;
+                            eventSelect.value = 'new';
+                            clearEventForm();
+                            setMessage('No existing events found. Create a new event.', 'success-message');
+                            return;
+                        }
+
+                        availableEvents = events;
+
+                        for (i = 0; i < availableEvents.length; i++) {
+                            options += '<option value="' + i + '">' + (availableEvents[i].name || ('Event ' + (i + 1))) + '</option>';
+                        }
+
+                        eventSelect.innerHTML = options;
+                        eventSelect.selectedIndex = 0;
+                        loadEventAtIndex(0);
+
+                        setMessage('Event loaded. You can now edit the details.', 'success-message');
+                    })
+                    .catch(function () {
+                        eventSelect.innerHTML = '<option value="">Unable to load events</option>';
+                        setMessage('Unable to load upcoming events at this time.', 'error-message');
+                    });
+            }
+
+            eventSelect.onchange = function () {
+                if (eventSelect.value === 'new') {
+                    clearEventForm();
+                    setMessage('New event selected. Enter event details.', 'success-message');
+                    return;
+                }
+
+                var selectedIndex = parseInt(eventSelect.value, 10);
+
+                if (isNaN(selectedIndex)) {
+                    return;
+                }
+
+                loadEventAtIndex(selectedIndex);
+                setMessage('Selected event loaded.', 'success-message');
+            };
+
+            form.onsubmit = function (event) {
+                event.preventDefault();
+
+                if (!eventName.value.trim() || !eventDate.value || eventOpportunities.value === '') {
+                    setMessage('Please fill in all required fields.', 'error-message');
+                    return false;
+                }
+
+                setMessage('Save complete. Event changes were not persisted.', 'success-message');
+                alert('Notification sent to all signed up volunteers about the event changes.');
+                return false;
+            };
+
+            preloadEvents();
+        })();
+    </script>
+</body>
+
+</html>
