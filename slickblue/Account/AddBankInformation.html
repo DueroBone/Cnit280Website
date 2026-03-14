@@ -1,0 +1,121 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <title> Special Population Resource
+        Connections</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>SPRC<span class="off">db</span></h1>
+            <h2>By Team 8</h2>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li class="menuitem"><a href="../index.html">Home</a></li>
+                <li class="menuitem"><a href="../Login.html">Login</a></li>
+                <li class="menuitem"><a href="../TODO.html">Products</a></li>
+                <li class="menuitem"><a href="../TODO.html">Services</a></li>
+                <li class="menuitem"><a href="../TODO.html">Contact</a></li>
+            </ul>
+        </div>
+
+        <div id="leftmenu">
+
+            <div id="leftmenu_top"></div>
+
+            <div id="leftmenu_main">
+
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="UserAccount.html">User Account</a></li>
+                    <li><a href="AdminUserSettings.html">Admin Settings</a></li>
+                </ul>
+            </div>
+
+
+            <div id="leftmenu_bottom"></div>
+        </div>
+
+
+        <div id="content">
+            <div id="content_top"></div>
+            <div id="content_main">
+                <h2>Add Payment Information</h2>
+                <p>&nbsp;</p>
+                <h3>Provide your payment details</h3>
+                <p>
+                    Complete the form below and click Submit. Required fields are marked with *.
+                </p>
+                <p>&nbsp;</p>
+
+                <form id="addPaymentForm" action="#" method="post">
+                    <label for="accountHolderName">Account Holder Name *</label><br />
+                    <input type="text" id="accountHolderName" name="accountHolderName" maxlength="100" /><br /><br />
+
+                    <label for="bankName">Bank Name *</label><br />
+                    <input type="text" id="bankName" name="bankName" maxlength="100" /><br /><br />
+
+                    <label for="routingNumber">Routing Number *</label><br />
+                    <input type="text" id="routingNumber" name="routingNumber" maxlength="9" /><br /><br />
+
+                    <label for="accountNumber">Account Number *</label><br />
+                    <input type="text" id="accountNumber" name="accountNumber" maxlength="17" /><br /><br />
+
+                    <label for="accountType">Account Type *</label><br />
+                    <select id="accountType" name="accountType">
+                        <option value="">Select</option>
+                        <option value="checking">Checking</option>
+                        <option value="savings">Savings</option>
+                    </select><br /><br />
+
+                    <label for="bankAddress">Bank Address</label><br />
+                    <input type="text" id="bankAddress" name="bankAddress" maxlength="150" /><br /><br />
+
+                    <input type="submit" value="Submit" />
+                </form>
+
+                <p id="paymentFormMessage" class="form-message"></p>
+            </div>
+
+            <div id="content_bottom"></div>
+            <div id="footer"><a href="http://www.bryantsmith.com/template">css templates</a> by <a
+                    href="http://www.bryantsmith.com">florida web design</a></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var form = document.getElementById('addPaymentForm');
+            var message = document.getElementById('paymentFormMessage');
+
+            function setMessage(text, className) {
+                message.className = 'form-message ' + className;
+                message.innerHTML = text;
+            }
+
+            form.onsubmit = function (event) {
+                event.preventDefault();
+
+                var accountHolderName = document.getElementById('accountHolderName').value.trim();
+                var bankName = document.getElementById('bankName').value.trim();
+                var routingNumber = document.getElementById('routingNumber').value.trim();
+                var accountNumber = document.getElementById('accountNumber').value.trim();
+                var accountType = document.getElementById('accountType').value.trim();
+                var bankAddress = document.getElementById('bankAddress').value.trim();
+
+                setMessage('Payment information saved successfully.', 'success-message');
+                form.reset();
+                return false;
+            };
+        })();
+    </script>
+</body>
+
+</html>

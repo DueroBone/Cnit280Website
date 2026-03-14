@@ -1,0 +1,127 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <title> Special Population Resource
+        Connections</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>SPRC<span class="off">db</span></h1>
+            <h2>By Team 8</h2>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li class="menuitem"><a href="../index.html">Home</a></li>
+                <li class="menuitem"><a href="../Login.html">Login</a></li>
+                <li class="menuitem"><a href="../TODO.html">Products</a></li>
+                <li class="menuitem"><a href="../TODO.html">Services</a></li>
+                <li class="menuitem"><a href="../TODO.html">Contact</a></li>
+            </ul>
+        </div>
+
+        <div id="leftmenu">
+
+            <div id="leftmenu_top"></div>
+
+            <div id="leftmenu_main">
+
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="UserAccount.html">User Account</a></li>
+                    <li><a href="AdminUserSettings.html">Admin Settings</a></li>
+                </ul>
+            </div>
+
+
+            <div id="leftmenu_bottom"></div>
+        </div>
+
+
+        <div id="content">
+            <div id="content_top"></div>
+            <div id="content_main">
+                <h2>Add Payment Information</h2>
+                <p>&nbsp;</p>
+                <h3>Provide your payment details</h3>
+                <p>
+                    Complete the form below and click Submit. Required fields are marked with *.
+                </p>
+                <p>&nbsp;</p>
+
+                <form id="addPaymentForm" action="#" method="post">
+                    <label for="cardholderName">Cardholder Name *</label><br />
+                    <input type="text" id="cardholderName" name="cardholderName" maxlength="100" /><br /><br />
+
+                    <label for="cardNumber">Card Number *</label><br />
+                    <input type="text" id="cardNumber" name="cardNumber" maxlength="19"
+                        placeholder="XXXX XXXX XXXX XXXX" /><br /><br />
+
+                    <label for="expirationDate">Expiration Date *</label><br />
+                    <input type="text" id="expirationDate" name="expirationDate" maxlength="5"
+                        placeholder="MM/YY" /><br /><br />
+
+                    <label for="cvv">CVV *</label><br />
+                    <input type="password" id="cvv" name="cvv" maxlength="3" /><br /><br />
+
+                    <label for="billingAddress">Billing Street Address *</label><br />
+                    <input type="text" id="billingAddress" name="billingAddress" maxlength="150" /><br /><br />
+
+                    <label for="city">City *</label><br />
+                    <input type="text" id="city" name="city" maxlength="80" /><br /><br />
+
+                    <label for="state">State *</label><br />
+                    <input type="text" id="state" name="state" maxlength="2" /><br /><br />
+
+                    <label for="zipCode">Zip Code *</label><br />
+                    <input type="text" id="zipCode" name="zipCode" maxlength="5" /><br /><br />
+
+                    <input type="submit" value="Submit" />
+                </form>
+
+                <p id="paymentFormMessage" class="form-message"></p>
+            </div>
+
+            <div id="content_bottom"></div>
+            <div id="footer"><a href="http://www.bryantsmith.com/template">css templates</a> by <a
+                    href="http://www.bryantsmith.com">florida web design</a></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var form = document.getElementById('addPaymentForm');
+            var message = document.getElementById('paymentFormMessage');
+
+            function setMessage(text, className) {
+                message.className = 'form-message ' + className;
+                message.innerHTML = text;
+            }
+
+            form.onsubmit = function (event) {
+                event.preventDefault();
+
+                var cardholderName = document.getElementById('cardholderName').value.trim();
+                var cardNumber = document.getElementById('cardNumber').value.trim();
+                var expirationDate = document.getElementById('expirationDate').value.trim();
+                var cvv = document.getElementById('cvv').value.trim();
+                var billingAddress = document.getElementById('billingAddress').value.trim();
+                var city = document.getElementById('city').value.trim();
+                var state = document.getElementById('state').value.trim();
+                var zipCode = document.getElementById('zipCode').value.trim();
+
+                setMessage('Payment information saved successfully.', 'success-message');
+                form.reset();
+                return false;
+            };
+        })();
+    </script>
+</body>
+
+</html>
