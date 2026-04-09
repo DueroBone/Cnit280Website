@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">
+  <rect width="900" height="1200" fill="#ffffff"/>
+  <rect x="0" y="0" width="900" height="140" fill="#1C478E"/>
+  <text x="60" y="75" font-family="Arial, Helvetica, sans-serif" font-size="42" fill="#ffffff" font-weight="bold">Jordan Applicant</text>
+  <text x="60" y="112" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#D4E5FF">Sample Resume Preview</text>
+
+  <text x="60" y="200" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#1C478E" font-weight="bold">Summary</text>
+  <line x1="60" y1="210" x2="840" y2="210" stroke="#1C478E" stroke-width="2"/>
+  <text x="60" y="250" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#222222">Detail-oriented professional with experience in program coordination, stakeholder outreach, and event support.</text>
+
+  <text x="60" y="320" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#1C478E" font-weight="bold">Experience</text>
+  <line x1="60" y1="330" x2="840" y2="330" stroke="#1C478E" stroke-width="2"/>
+  <text x="60" y="372" font-family="Arial, Helvetica, sans-serif" font-size="21" fill="#111111" font-weight="bold">Program Assistant | Community Access Partners</text>
+  <text x="60" y="404" font-family="Arial, Helvetica, sans-serif" font-size="19" fill="#333333">2023 - Present</text>
+  <text x="80" y="438" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">- Coordinated 20+ outreach events and tracked attendance metrics.</text>
+  <text x="80" y="468" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">- Improved volunteer communication workflows with standardized templates.</text>
+
+  <text x="60" y="540" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#1C478E" font-weight="bold">Education</text>
+  <line x1="60" y1="550" x2="840" y2="550" stroke="#1C478E" stroke-width="2"/>
+  <text x="60" y="592" font-family="Arial, Helvetica, sans-serif" font-size="21" fill="#111111" font-weight="bold">B.S. Information Systems</text>
+  <text x="60" y="624" font-family="Arial, Helvetica, sans-serif" font-size="19" fill="#333333">State University | 2022</text>
+
+  <text x="60" y="700" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#1C478E" font-weight="bold">Skills</text>
+  <line x1="60" y1="710" x2="840" y2="710" stroke="#1C478E" stroke-width="2"/>
+  <text x="80" y="750" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">- Event planning and participation reporting</text>
+  <text x="80" y="780" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">- Stakeholder communication</text>
+  <text x="80" y="810" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">- Data entry and quality review</text>
+
+  <rect x="60" y="905" width="780" height="230" fill="#F6F9FF" stroke="#B8C3D9"/>
+  <text x="80" y="955" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#1C478E" font-weight="bold">Demo Note</text>
+  <text x="80" y="992" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">This resume preview is loaded from the system resume record.</text>
+  <text x="80" y="1022" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#222222">The upload request flow is simulated and does not send files to a server.</text>
+</svg>

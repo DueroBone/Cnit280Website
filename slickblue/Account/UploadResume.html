@@ -1,0 +1,149 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <title>Special Population Resource Connections</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>SPRC<span class="off">db</span></h1>
+            <h2>By Team 8</h2>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li class="menuitem"><a href="../index.html">Home</a></li>
+                <li class="menuitem"><a href="../TODO.html">Login</a></li>
+                <li class="menuitem"><a href="../TODO.html">Products</a></li>
+                <li class="menuitem"><a href="../TODO.html">Services</a></li>
+                <li class="menuitem"><a href="../TODO.html">Contact</a></li>
+            </ul>
+        </div>
+
+        <div id="leftmenu">
+            <div id="leftmenu_top"></div>
+            <div id="leftmenu_main">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="UserAccount.html">User Account</a></li>
+                    <li><a href="UploadResume.html">Upload Resume</a></li>
+                    <li><a href="AddContactInformationUseCase.html">Add Contact Info</a></li>
+                    <li><a href="AddPaymentInformation.html">Add Payment Info</a></li>
+                </ul>
+            </div>
+            <div id="leftmenu_bottom"></div>
+        </div>
+
+        <div id="content">
+            <div id="content_top"></div>
+            <div id="content_main">
+                <h2>Resume Management</h2>
+                <p>&nbsp;</p>
+                <h3>Upload Your Resume</h3>
+                <p>Select a resume file and submit an upload request. This demo does not actually send files to a
+                    server.</p>
+                <p>&nbsp;</p>
+
+                <form id="resumeUploadForm" action="#" method="post" enctype="multipart/form-data">
+                    <label for="resumeFile">Resume File (PDF, DOC, DOCX)</label><br />
+                    <input type="file" id="resumeFile" name="resumeFile" accept=".pdf,.doc,.docx" /><br /><br />
+                    <input type="submit" value="Request Upload" />
+                    <button type="button" id="viewResumeButton">View Resume</button>
+                </form>
+
+                <p id="resumeMessage" class="form-message"></p>
+
+                <div id="resumePreview" class="resume-preview" style="display: none;">
+                    <h3>Current Resume On File</h3>=
+                    <p><a id="resumeDownloadLink" href="../images/resume-sample.svg" target="_blank">Open Resume in New
+                            Tab</a></p>
+                    <img id="resumePreviewImage" src="../images/resume-sample.svg" alt="Resume preview" />
+                </div>
+            </div>
+
+            <div id="content_bottom"></div>
+            <div id="footer"><a href="http://www.bryantsmith.com/template">css templates</a> by <a
+                    href="http://www.bryantsmith.com">florida web design</a></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var form = document.getElementById('resumeUploadForm');
+            var fileInput = document.getElementById('resumeFile');
+            var viewButton = document.getElementById('viewResumeButton');
+            var messageElement = document.getElementById('resumeMessage');
+            var previewElement = document.getElementById('resumePreview');
+            var previewImage = document.getElementById('resumePreviewImage');
+            var downloadLink = document.getElementById('resumeDownloadLink');
+
+            var resumeApi = {
+                // API stub: would normally send file to backend storage.
+                requestResumeUpload: function (fileMeta) {
+                    return Promise.resolve({
+                        status: 'accepted',
+                        uploadId: 'upload-001',
+                        fileName: fileMeta.fileName,
+                        message: 'Upload request received (simulated).'
+                    });
+                },
+
+                // API stub: returns a sample resume path as if fetched from backend.
+                getCurrentResume: function () {
+                    return Promise.resolve({
+                        fileName: 'resume-sample.svg',
+                        fileUrl: '../images/resume-sample.svg'
+                    });
+                }
+            };
+
+            function setMessage(text, className) {
+                messageElement.className = 'form-message ' + className;
+                messageElement.innerHTML = text;
+            }
+
+            form.onsubmit = function (event) {
+                event.preventDefault();
+
+                if (!fileInput.files || !fileInput.files.length) {
+                    setMessage('Please choose a file before requesting upload.', 'error-message');
+                    return false;
+                }
+
+                resumeApi.requestResumeUpload({
+                    fileName: fileInput.files[0].name,
+                    fileSize: fileInput.files[0].size
+                })
+                    .then(function (response) {
+                        setMessage(response.message + ' File: ' + response.fileName, 'success-message');
+                    })
+                    .catch(function () {
+                        setMessage('Unable to process upload request right now.', 'error-message');
+                    });
+
+                return false;
+            };
+
+            viewButton.onclick = function () {
+                resumeApi.getCurrentResume()
+                    .then(function (resume) {
+                        previewImage.src = resume.fileUrl;
+                        downloadLink.href = resume.fileUrl;
+                        downloadLink.innerHTML = 'Open ' + resume.fileName + ' in New Tab';
+                        previewElement.style.display = 'block';
+                        setMessage('Resume preview loaded successfully.', 'success-message');
+                    })
+                    .catch(function () {
+                        setMessage('Unable to load resume preview right now.', 'error-message');
+                    });
+            };
+        })();
+    </script>
+</body>
+
+</html>

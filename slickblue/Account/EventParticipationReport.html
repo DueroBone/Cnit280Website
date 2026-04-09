@@ -1,0 +1,255 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <title>Special Population Resource Connections</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>SPRC<span class="off">db</span></h1>
+            <h2>By Team 8</h2>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li class="menuitem"><a href="../index.html">Home</a></li>
+                <li class="menuitem"><a href="../Login.html">Login</a></li>
+                <li class="menuitem"><a href="../TODO.html">Products</a></li>
+                <li class="menuitem"><a href="../TODO.html">Services</a></li>
+                <li class="menuitem"><a href="../TODO.html">Contact</a></li>
+            </ul>
+        </div>
+
+        <div id="leftmenu">
+            <div id="leftmenu_top"></div>
+            <div id="leftmenu_main">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="AdminUserSettings.html">Admin Settings</a></li>
+                    <li><a href="EventParticipationReport.html">Participation Reports</a></li>
+                    <li><a href="AdminResumeBackgroundCheck.html">Resume Background Checks</a></li>
+                    <li><a href="../EditUpcomingEvent.html">Edit/Create Upcoming Event</a></li>
+                </ul>
+            </div>
+            <div id="leftmenu_bottom"></div>
+        </div>
+
+        <div id="content">
+            <div id="content_top"></div>
+            <div id="content_main">
+                <h2>Event Participation Report</h2>
+                <p>&nbsp;</p>
+                <h3>Generate Admin Reports</h3>
+                <p>Use the filters below to review attendance and evaluate event performance.</p>
+                <p>&nbsp;</p>
+
+                <form id="reportFilterForm" action="#" method="post" class="report-filters">
+                    <label for="eventType">Event Type</label><br />
+                    <select id="eventType" name="eventType">
+                        <option value="all">All Events</option>
+                        <option value="community">Community Outreach</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="fundraiser">Fundraiser</option>
+                    </select><br /><br />
+
+                    <input type="submit" value="Generate Report" />
+                    <button type="button" id="exportReportButton">Export CSV</button>
+                </form>
+
+                <p id="reportMessage" class="form-message"></p>
+
+                <div id="reportSummary" class="report-summary"></div>
+
+                <table id="reportTable" class="report-table" summary="Event participation report details">
+                    <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Registrations</th>
+                            <th>Checked In</th>
+                            <th>Participation Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody"></tbody>
+                </table>
+            </div>
+
+            <div id="content_bottom"></div>
+            <div id="footer"><a href="http://www.bryantsmith.com/template">css templates</a> by <a
+                    href="http://www.bryantsmith.com">florida web design</a></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var reportForm = document.getElementById('reportFilterForm');
+            var exportButton = document.getElementById('exportReportButton');
+            var messageElement = document.getElementById('reportMessage');
+            var summaryElement = document.getElementById('reportSummary');
+            var tableBodyElement = document.getElementById('reportTableBody');
+            var reportTable = document.getElementById('reportTable');
+            var currentReportData = null;
+
+            function setMessage(text, className) {
+                messageElement.className = 'form-message ' + className;
+                messageElement.innerHTML = text;
+            }
+
+            function calculateRate(checkedIn, registrations) {
+                if (!registrations) {
+                    return '0%';
+                }
+                return Math.round((checkedIn / registrations) * 100) + '%';
+            }
+
+            function renderSummary(summary) {
+                summaryElement.innerHTML = '';
+
+                summaryElement.innerHTML =
+                    '<div class="report-metric">' +
+                    '<h4>Total Events</h4>' +
+                    '<p>' + summary.totalEvents + '</p>' +
+                    '</div>' +
+                    '<div class="report-metric">' +
+                    '<h4>Total Registrations</h4>' +
+                    '<p>' + summary.totalRegistrations + '</p>' +
+                    '</div>' +
+                    '<div class="report-metric">' +
+                    '<h4>Total Attendees</h4>' +
+                    '<p>' + summary.totalCheckedIn + '</p>' +
+                    '</div>' +
+                    '<div class="report-metric">' +
+                    '<h4>Average Participation</h4>' +
+                    '<p>' + summary.averageParticipationRate + '</p>' +
+                    '</div>';
+            }
+
+            function renderRows(events) {
+                var html = '';
+                var i;
+
+                if (!events || !events.length) {
+                    tableBodyElement.innerHTML = '';
+                    reportTable.style.display = 'none';
+                    setMessage('No report data matched your filters.', 'error-message');
+                    return;
+                }
+
+                for (i = 0; i < events.length; i++) {
+                    html += '<tr>';
+                    html += '<td>' + events[i].eventName + '</td>';
+                    html += '<td>' + events[i].date + '</td>';
+                    html += '<td>' + events[i].eventType + '</td>';
+                    html += '<td>' + events[i].registrations + '</td>';
+                    html += '<td>' + events[i].checkedIn + '</td>';
+                    html += '<td>' + calculateRate(events[i].checkedIn, events[i].registrations) + '</td>';
+                    html += '</tr>';
+                }
+
+                tableBodyElement.innerHTML = html;
+                reportTable.style.display = 'table';
+                setMessage('Report generated successfully.', 'success-message');
+            }
+
+            function getFilters() {
+                return {
+                    eventType: document.getElementById('eventType').value
+                };
+            }
+
+            var reportApi = {
+                // API stub: replace hardcoded values with a real backend request.
+                fetchParticipationReport: function (filters) {
+                    var allEvents = [
+                        { eventName: 'Health Fair Outreach', date: '2026-02-12', eventType: 'community', registrations: 60, checkedIn: 49 },
+                        { eventName: 'Caregiver Workshop', date: '2026-02-27', eventType: 'workshop', registrations: 42, checkedIn: 34 },
+                        { eventName: 'Spring Fundraiser Gala', date: '2026-03-18', eventType: 'fundraiser', registrations: 105, checkedIn: 88 },
+                        { eventName: 'Neighborhood Wellness Talk', date: '2026-03-29', eventType: 'community', registrations: 51, checkedIn: 44 }
+                    ];
+
+                    var filteredEvents = allEvents.filter(function (eventItem) {
+                        var typeMatch = filters.eventType === 'all' || eventItem.eventType === filters.eventType;
+                        return typeMatch;
+                    });
+
+                    var registrations = 0;
+                    var checkedIn = 0;
+                    var averageRate = '0%';
+                    var i;
+
+                    for (i = 0; i < filteredEvents.length; i++) {
+                        registrations += filteredEvents[i].registrations;
+                        checkedIn += filteredEvents[i].checkedIn;
+                    }
+
+                    if (registrations > 0) {
+                        averageRate = Math.round((checkedIn / registrations) * 100) + '%';
+                    }
+
+                    return Promise.resolve({
+                        summary: {
+                            totalEvents: filteredEvents.length,
+                            totalRegistrations: registrations,
+                            totalCheckedIn: checkedIn,
+                            averageParticipationRate: averageRate
+                        },
+                        events: filteredEvents
+                    });
+                },
+
+                // API stub: simulate backend export endpoint.
+                exportParticipationReport: function () {
+                    return Promise.resolve({
+                        status: 'success',
+                        fileName: 'event-participation-report.csv'
+                    });
+                }
+            };
+
+            function loadReport(filters) {
+                setMessage('Generating report...', 'success-message');
+
+                return reportApi.fetchParticipationReport(filters)
+                    .then(function (reportData) {
+                        currentReportData = reportData;
+                        renderSummary(reportData.summary);
+                        renderRows(reportData.events);
+                    })
+                    .catch(function () {
+                        setMessage('Unable to generate report at this time.', 'error-message');
+                    });
+            }
+
+            reportForm.onsubmit = function (event) {
+                event.preventDefault();
+                loadReport(getFilters());
+                return false;
+            };
+
+            exportButton.onclick = function () {
+                if (!currentReportData || !currentReportData.events.length) {
+                    setMessage('Generate a report before exporting.', 'error-message');
+                    return;
+                }
+
+                reportApi.exportParticipationReport(currentReportData)
+                    .then(function (result) {
+                        setMessage('Export ready: ' + result.fileName + ' (simulated).', 'success-message');
+                    })
+                    .catch(function () {
+                        setMessage('Unable to export report at this time.', 'error-message');
+                    });
+            };
+
+            loadReport(getFilters());
+        })();
+    </script>
+</body>
+
+</html>

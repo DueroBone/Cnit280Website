@@ -1,0 +1,262 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <title>Special Population Resource Connections</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>SPRC<span class="off">db</span></h1>
+            <h2>By Team 8</h2>
+        </div>
+
+        <div id="menu">
+            <ul>
+                <li class="menuitem"><a href="../index.html">Home</a></li>
+                <li class="menuitem"><a href="../Login.html">Login</a></li>
+                <li class="menuitem"><a href="../TODO.html">Products</a></li>
+                <li class="menuitem"><a href="../TODO.html">Services</a></li>
+                <li class="menuitem"><a href="../TODO.html">Contact</a></li>
+            </ul>
+        </div>
+
+        <div id="leftmenu">
+            <div id="leftmenu_top"></div>
+            <div id="leftmenu_main">
+                <h3>Links</h3>
+                <ul>
+                    <li><a href="AdminUserSettings.html">Admin Settings</a></li>
+                    <li><a href="EventParticipationReport.html">Participation Reports</a></li>
+                    <li><a href="AdminResumeBackgroundCheck.html">Resume Background Checks</a></li>
+                    <li><a href="../EditUpcomingEvent.html">Edit/Create Upcoming Event</a></li>
+                </ul>
+            </div>
+            <div id="leftmenu_bottom"></div>
+        </div>
+
+        <div id="content">
+            <div id="content_top"></div>
+            <div id="content_main">
+                <h2>Resume & Background Review</h2>
+                <p>&nbsp;</p>
+                <h3>Review User Resumes</h3>
+                <p>Select a user to view the resume on file and run a background check.</p>
+                <p>&nbsp;</p>
+
+                <label for="resumeUserSelect">Select User</label><br />
+                <select id="resumeUserSelect" name="resumeUserSelect"></select><br /><br />
+
+                <button type="button" id="viewResumeButton">View Resume</button>
+                <button type="button" id="runBackgroundCheckButton">Run Background Check</button>
+
+                <p id="adminResumeMessage" class="form-message"></p>
+
+                <div id="selectedUserCard" class="admin-card" style="display: none;"></div>
+
+                <div id="adminResumePreview" class="resume-preview" style="display: none;">
+                    <h3>Resume On File</h3>
+                    <p><a id="adminResumeLink" href="../images/resume-sample.svg" target="_blank">Open Resume in New
+                            Tab</a></p>
+                    <img id="adminResumeImage" src="../images/resume-sample.svg" alt="User resume preview" />
+                </div>
+
+                <div id="backgroundCheckResult" class="admin-card" style="display: none;"></div>
+            </div>
+
+            <div id="content_bottom"></div>
+            <div id="footer"><a href="http://www.bryantsmith.com/template">css templates</a> by <a
+                    href="http://www.bryantsmith.com">florida web design</a></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var userSelect = document.getElementById('resumeUserSelect');
+            var viewResumeButton = document.getElementById('viewResumeButton');
+            var runBackgroundCheckButton = document.getElementById('runBackgroundCheckButton');
+            var messageElement = document.getElementById('adminResumeMessage');
+            var selectedUserCard = document.getElementById('selectedUserCard');
+            var resumePreview = document.getElementById('adminResumePreview');
+            var resumeLink = document.getElementById('adminResumeLink');
+            var resumeImage = document.getElementById('adminResumeImage');
+            var backgroundCheckResult = document.getElementById('backgroundCheckResult');
+            var users = [];
+
+            var adminApi = {
+                // API stub: would normally query users and resume metadata from the backend.
+                fetchUsersWithResumes: function () {
+                    return Promise.resolve([
+                        {
+                            id: 'u-001',
+                            name: 'John Doe',
+                            email: 'john.doe@example.org',
+                            role: 'Volunteer',
+                            resumeFileName: 'resume-sample.svg'
+                        },
+                        {
+                            id: 'u-002',
+                            name: 'Jane Smith',
+                            email: 'jane.smith@example.org',
+                            role: 'Coordinator',
+                            resumeFileName: 'resume-sample.svg'
+                        },
+                        {
+                            id: 'u-003',
+                            name: 'Bob Johnson',
+                            email: 'bob.johnson@example.org',
+                            role: 'Support Staff',
+                            resumeFileName: 'resume-sample.svg'
+                        }
+                    ]);
+                },
+
+                // API stub: would normally fetch a user-specific resume location.
+                getUserResume: function (userId) {
+                    return Promise.resolve({
+                        userId: userId,
+                        fileName: 'resume-sample.svg',
+                        fileUrl: '../images/resume-sample.svg'
+                    });
+                },
+
+                // API stub: would normally trigger an external background check service.
+                performBackgroundCheck: function () {
+                    return Promise.resolve({
+                        status: 'Clear',
+                        completedOn: '2026-04-09',
+                        referenceId: 'BG-15100',
+                        notes: 'No findings reported.'
+                    });
+                }
+            };
+
+            function setMessage(text, className) {
+                messageElement.className = 'form-message ' + className;
+                messageElement.innerHTML = text;
+            }
+
+            function getSelectedUser() {
+                var selectedId = userSelect.value;
+                var i;
+
+                for (i = 0; i < users.length; i++) {
+                    if (users[i].id === selectedId) {
+                        return users[i];
+                    }
+                }
+
+                return null;
+            }
+
+            function renderSelectedUser(user) {
+                if (!user) {
+                    selectedUserCard.style.display = 'none';
+                    return;
+                }
+
+                selectedUserCard.innerHTML =
+                    '<h3>Selected User</h3>' +
+                    '<p><strong>Name:</strong> ' + user.name + '</p>' +
+                    '<p><strong>Email:</strong> ' + user.email + '</p>' +
+                    '<p><strong>Role:</strong> ' + user.role + '</p>' +
+                    '<p><strong>Resume File:</strong> ' + user.resumeFileName + '</p>';
+                selectedUserCard.style.display = 'block';
+            }
+
+            function renderBackgroundCheck(result, user) {
+                var statusClass = result.status === 'Clear' ? 'success-message' : 'error-message';
+
+                backgroundCheckResult.innerHTML =
+                    '<h3>Background Check Result</h3>' +
+                    '<p><strong>User:</strong> ' + user.name + '</p>' +
+                    '<p><strong>Status:</strong> <span class="' + statusClass + '">' + result.status + '</span></p>' +
+                    '<p><strong>Completed On:</strong> ' + result.completedOn + '</p>' +
+                    '<p><strong>Reference ID:</strong> ' + result.referenceId + '</p>' +
+                    '<p><strong>Notes:</strong> ' + result.notes + '</p>';
+                backgroundCheckResult.style.display = 'block';
+            }
+
+            function loadUsers() {
+                return adminApi.fetchUsersWithResumes()
+                    .then(function (fetchedUsers) {
+                        var optionsHtml = '';
+                        var i;
+
+                        users = fetchedUsers;
+
+                        if (!users.length) {
+                            setMessage('No users with resumes were found.', 'error-message');
+                            userSelect.innerHTML = '';
+                            return;
+                        }
+
+                        for (i = 0; i < users.length; i++) {
+                            optionsHtml += '<option value="' + users[i].id + '">' + users[i].name + ' (' + users[i].role + ')</option>';
+                        }
+
+                        userSelect.innerHTML = optionsHtml;
+                        renderSelectedUser(getSelectedUser());
+                        setMessage('Users loaded successfully.', 'success-message');
+                    })
+                    .catch(function () {
+                        setMessage('Unable to load users at this time.', 'error-message');
+                    });
+            }
+
+            userSelect.onchange = function () {
+                renderSelectedUser(getSelectedUser());
+                backgroundCheckResult.style.display = 'none';
+            };
+
+            viewResumeButton.onclick = function () {
+                var selectedUser = getSelectedUser();
+
+                if (!selectedUser) {
+                    setMessage('Please select a user first.', 'error-message');
+                    return;
+                }
+
+                adminApi.getUserResume(selectedUser.id)
+                    .then(function (resume) {
+                        resumeImage.src = resume.fileUrl;
+                        resumeLink.href = resume.fileUrl;
+                        resumeLink.innerHTML = 'Open ' + resume.fileName + ' in New Tab';
+                        resumePreview.style.display = 'block';
+                        setMessage('Resume loaded for ' + selectedUser.name + '.', 'success-message');
+                    })
+                    .catch(function () {
+                        setMessage('Unable to load the selected user resume.', 'error-message');
+                    });
+            };
+
+            runBackgroundCheckButton.onclick = function () {
+                var selectedUser = getSelectedUser();
+
+                if (!selectedUser) {
+                    setMessage('Please select a user first.', 'error-message');
+                    return;
+                }
+
+                setMessage('Running background check...', 'success-message');
+
+                adminApi.performBackgroundCheck(selectedUser.id)
+                    .then(function (result) {
+                        renderBackgroundCheck(result, selectedUser);
+                        setMessage('Background check completed for ' + selectedUser.name + '.', 'success-message');
+                    })
+                    .catch(function () {
+                        setMessage('Unable to run the background check at this time.', 'error-message');
+                    });
+            };
+
+            loadUsers();
+        })();
+    </script>
+</body>
+
+</html>

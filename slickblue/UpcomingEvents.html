@@ -65,6 +65,7 @@
         (function () {
             var listElement = document.getElementById('upcomingEventsList');
             var messageElement = document.getElementById('eventsMessage');
+            var loadedEvents = [];
 
             window.toggleEventSignup = function (buttonElement) {
                 alert('You have beed added to this event');
@@ -73,6 +74,109 @@
                     buttonElement.innerHTML = 'Leave';
                 } else {
                     buttonElement.innerHTML = 'Sign Up';
+                }
+            };
+
+            var calendarApi = {
+                // API stub: would normally request export data from backend.
+                getEventForCalendarExport: function (eventItem) {
+                    return Promise.resolve({
+                        title: eventItem.name,
+                        date: eventItem.date,
+                        description: 'SPRC volunteer event participation.',
+                        location: 'SPRC Community Center'
+                    });
+                }
+            };
+
+            function pad(value) {
+                return value < 10 ? '0' + value : String(value);
+            }
+
+            function toIcsTimestamp(dateValue, hour, minute) {
+                var dateParts = (dateValue || '').split('-');
+
+                if (dateParts.length !== 3) {
+                    return '20260101T090000';
+                }
+
+                return dateParts[0] + dateParts[1] + dateParts[2] + 'T' +
+                    pad(hour) + pad(minute) + '00';
+            }
+
+            function sanitizeIcsText(value) {
+                return String(value || '')
+                    .replace(/\\/g, '\\\\')
+                    .replace(/\n/g, '\\n')
+                    .replace(/,/g, '\\,')
+                    .replace(/;/g, '\\;');
+            }
+
+            function buildIcsContent(eventData) {
+                var startDate = toIcsTimestamp(eventData.date, 9, 0);
+                var endDate = toIcsTimestamp(eventData.date, 10, 0);
+                var uid = String(new Date().getTime()) + '@sprcdb';
+
+                return [
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//SPRC//Event Export//EN',
+                    'BEGIN:VEVENT',
+                    'UID:' + uid,
+                    'DTSTAMP:20260409T000000',
+                    'DTSTART:' + startDate,
+                    'DTEND:' + endDate,
+                    'SUMMARY:' + sanitizeIcsText(eventData.title),
+                    'DESCRIPTION:' + sanitizeIcsText(eventData.description),
+                    'LOCATION:' + sanitizeIcsText(eventData.location),
+                    'END:VEVENT',
+                    'END:VCALENDAR'
+                ].join('\r\n');
+            }
+
+            function downloadIcsFile(fileName, content) {
+                var blob = new Blob([content], { type: 'text/calendar;charset=utf-8' });
+                var url = window.URL.createObjectURL(blob);
+                var downloadLink = document.createElement('a');
+
+                downloadLink.href = url;
+                downloadLink.download = fileName;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                window.URL.revokeObjectURL(url);
+            }
+
+            window.exportEventToCalendar = function (eventIndex) {
+                var selectedEvent = loadedEvents[eventIndex];
+
+                if (!selectedEvent) {
+                    setMessage('Unable to export the selected event.', 'error-message');
+                    return;
+                }
+
+                calendarApi.getEventForCalendarExport(selectedEvent)
+                    .then(function (eventData) {
+                        var fileName = (eventData.title || 'event').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.ics';
+                        var icsContent = buildIcsContent(eventData);
+                        downloadIcsFile(fileName, icsContent);
+                        setMessage('Event exported to your calendar file successfully.', 'success-message');
+                    })
+                    .catch(function () {
+                        setMessage('Unable to export this event right now.', 'error-message');
+                    });
+            };
+
+            window.exportAllEventsToCalendar = function () {
+                var i;
+
+                if (!loadedEvents.length) {
+                    setMessage('No events are available to export.', 'error-message');
+                    return;
+                }
+
+                for (i = 0; i < loadedEvents.length; i++) {
+                    window.exportEventToCalendar(i);
                 }
             };
 
@@ -97,11 +201,15 @@
                     html += '<p><strong>Date:</strong> ' + (events[i].date || 'N/A') + '</p>';
                     html += '<p><strong>Number of Volunteers Needed:</strong> ' +
                         (events[i].numOpportunities !== undefined ? events[i].numOpportunities : 'N/A') + '</p>';
+                    html += '<div class="event-actions">';
                     html += '<button type="button" onclick="toggleEventSignup(this)">Sign Up</button>';
+                    html += '<button type="button" onclick="exportEventToCalendar(' + i + ')">Export to Calendar</button>';
+                    html += '</div>';
                     html += '</li>';
                 }
 
                 listElement.innerHTML = html;
+                listElement.innerHTML += '<li class="event-item"><button type="button" onclick="exportAllEventsToCalendar()">Export All Events to Calendar</button></li>';
                 setMessage('Events loaded successfully.', 'success-message');
             }
 
@@ -113,6 +221,7 @@
                     return response.json();
                 })
                 .then(function (events) {
+                    loadedEvents = events || [];
                     renderEvents(events);
                 })
                 .catch(function () {
