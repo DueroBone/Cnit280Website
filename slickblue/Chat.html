@@ -44,21 +44,37 @@
                 <h2>Chat</h2>
                 <p>&nbsp;</p>
 
-                <h3>Start Building Your Chat Experience</h3>
-                <p>
-                    This page is ready for your chat UI. Add your chat transcript area, message input,
-                    send button, and any live update logic you want to include.
-                </p>
+                <h3>Conversation</h3>
+                <div class="chat-panel">
+                    <div class="chat-controls">
+                        <label for="chat-recipient">Message user</label>
+                        <select id="chat-recipient" name="chat-recipient">
+                            <option value="support">Support</option>
+                            <option value="user-a">User 1</option>
+                            <option value="user-b">User 2</option>
+                        </select>
+                    </div>
 
-                <p>&nbsp;</p>
+                    <div class="chat-history" aria-live="polite" aria-label="Chat history">
+                        <div class="chat-message chat-message--support">
+                            <strong>Support:</strong> Hello, how can we help today?
+                        </div>
+                        <div class="chat-message chat-message--user">
+                            <strong>User 1:</strong> I have a question about tonight's event.
+                        </div>
+                        <div class="chat-message chat-message--support">
+                            <strong>Support:</strong> We can help with that. Please share the date.
+                        </div>
+                    </div>
 
-                <h3>Starter Ideas</h3>
-                <ul>
-                    <li>Add a chat history panel.</li>
-                    <li>Add a text box and send button.</li>
-                    <li>Store messages in local storage for testing.</li>
-                    <li>Connect to your backend API when ready.</li>
-                </ul>
+                    <form class="chat-form" action="#" method="post">
+                        <label for="chat-message">Message</label>
+                        <input id="chat-message" name="chat-message" type="text" placeholder="Type your message here" />
+                        <div class="chat-actions">
+                            <button type="button" class="action-button">Send Message</button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div id="content_bottom"></div>
             <div id="footer"><a href="http://www.bryantsmith.com/template">css templates</a> by <a
